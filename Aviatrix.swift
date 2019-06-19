@@ -10,28 +10,39 @@ import Foundation
 
 class Aviatrix {
     var author = ""
+    var running = false
     var data = AviatrixData()
     var location = "St. Louis"
-    init(newAuthor : String) {
+    var distanceTraveled = 0.0
+    var maxFuel = 5000.0
+    var fuelLevel = 5000.0
+    var milesPerGallon = 0.4
+    var fuelCost = 0.0
+    
+    init (newAuthor : String){
         author = newAuthor
     }
-    var running = false
+    
     func start() -> Bool {
         running = true
         return running
     }
     
     func refuel() {
-        
+        fuelLevel = maxFuel
+        fuelCost += data.fuelPrices[plane.location]!
+
     }
     
-    func flyTo(destination : String) {
+    func flyTo(destination : String, target : String) {
         location = destination
-        
+        distanceTraveled += Double(plane.distanceTo(target: destination, location: location))
+        fuelLevel -= distanceTraveled / milesPerGallon
+    
     }
     
     func distanceTo(target : String, location : String) -> Int {
-        return Int (data.knownDistances["St. Louis"]![target]!)
+        return data.knownDistances["St. Louis"]![target]!
     }
     
     func knownDestinations() -> [String] {
